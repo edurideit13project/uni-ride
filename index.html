@@ -5,169 +5,158 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FreshBite Campus Market</title>
 <style>
-    * { box-sizing: border-box; margin:0; padding:0; }
-    body {
-        font-family: Arial, sans-serif;
-        background: url('logo.jpg') no-repeat center center fixed;
-        background-size: cover;
-        color: #333;
-        line-height: 1.5;
-    }
-    header {
-        background: rgba(76,175,80,0.85);
-        color: #fff;
-        text-align: center;
-        padding: 25px 15px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    }
-    header h1 { font-size: 2em; margin-bottom:5px; }
-    header p { font-size:1em; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+    font-family: Arial, sans-serif;
+    background: url('logo.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color:#333;
+    line-height:1.5;
+}
+header {
+    background: rgba(76,175,80,0.85);
+    color:#fff;
+    text-align:center;
+    padding:25px 15px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.3);
+}
+header h1 { font-size:2em; margin-bottom:5px; }
+header p { font-size:1em; }
 
-    .container {
-        width: 90%;
-        max-width: 500px;
-        margin: 25px auto;
-        background: rgba(255,255,255,0.95);
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    }
-    h2 { text-align:center; color:#4CAF50; margin-bottom:20px; }
+.container {
+    width:90%;
+    max-width:500px;
+    margin:25px auto;
+    background: rgba(255,255,255,0.95);
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.2);
+}
+h2 { text-align:center; color:#4CAF50; margin-bottom:20px; }
 
-    input, select, button {
-        width: 100%;
-        padding: 14px;
-        margin: 10px 0;
-        border-radius: 8px;
-        border:1px solid #ccc;
-        font-size:1em;
-        outline:none;
-        transition: all 0.3s ease;
-    }
-    input:focus, select:focus { border-color:#4CAF50; box-shadow:0 0 8px rgba(76,175,80,0.4); }
-    button {
-        background:#4CAF50;
-        color:#fff;
-        font-weight:bold;
-        font-size:1.1em;
-        cursor:pointer;
-        transition: background 0.3s ease, transform 0.2s ease;
-    }
-    button:hover { background:#45a049; transform:translateY(-2px); }
+input, select, button {
+    width:100%;
+    padding:14px;
+    margin:10px 0;
+    border-radius:8px;
+    border:1px solid #ccc;
+    font-size:1em;
+    outline:none;
+    transition: all 0.3s ease;
+}
+input:focus, select:focus { border-color:#4CAF50; box-shadow:0 0 8px rgba(76,175,80,0.4); }
+button {
+    background:#4CAF50;
+    color:#fff;
+    font-weight:bold;
+    font-size:1.1em;
+    cursor:pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+button:hover { background:#45a049; transform:translateY(-2px); }
 
-    #sellerPanel, #buyerPanel { display:none; }
+#sellerPanel, #buyerPanel { display:none; }
 
-    .product {
-        background:#f9f9f9;
-        padding:15px;
-        margin:12px 0;
-        border-radius:10px;
-        border-left:6px solid #4CAF50;
-        box-shadow:0 2px 8px rgba(0,0,0,0.1);
-    }
-    .product img { width:100%; border-radius:8px; margin-bottom:8px; }
-    .product button { margin-top:8px; }
+.product {
+    background:#f9f9f9;
+    padding:15px;
+    margin:12px 0;
+    border-radius:10px;
+    border-left:6px solid #4CAF50;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+.product img { width:100%; border-radius:8px; margin-bottom:8px; }
+.product button { margin-top:8px; }
 
-    @media (max-width:768px) {
-        header h1{font-size:1.6em;}
-        header p{font-size:0.95em;}
-        .container{padding:20px;}
-        input,select,button{padding:12px;font-size:0.95em;}
-    }
-    @media (max-width:480px) {
-        header h1{font-size:1.4em;}
-        header p{font-size:0.9em;}
-        .container{padding:18px;}
-        input,select,button{padding:10px;font-size:0.9em;}
-    }
+@media (max-width:768px) {
+    header h1{font-size:1.6em;}
+    header p{font-size:0.95em;}
+    .container{padding:20px;}
+    input,select,button{padding:12px;font-size:0.95em;}
+}
+@media (max-width:480px) {
+    header h1{font-size:1.4em;}
+    header p{font-size:0.9em;}
+    .container{padding:18px;}
+    input,select,button{padding:10px;font-size:0.9em;}
+}
 </style>
 </head>
 <body>
 
 <header>
-    <h1>FreshBite Campus Market</h1>
-    <p>Affordable Vegetables for Students</p>
+<h1>FreshBite Campus Market</h1>
+<p>Affordable Vegetables for Students</p>
 </header>
 
 <!-- ROLE SELECTION -->
 <div class="container" id="roleSelect">
-    <h2>Choose Account Type</h2>
-    <button id="sellerBtn">I am a Seller</button>
-    <button id="buyerBtn">I am a Buyer</button>
+<h2>Choose Account Type</h2>
+<button onclick="chooseRole('seller')">I am a Seller</button>
+<button onclick="chooseRole('buyer')">I am a Buyer</button>
 </div>
 
 <!-- AUTH SECTION -->
 <div class="container" id="authSection" style="display:none;">
-    <h2 id="authTitle">Login</h2>
-    <input id="name" placeholder="Full Name">
-    <input id="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
-    <input id="whatsapp" placeholder="WhatsApp Number (for sellers)">
-    <button id="registerBtn">Create Account</button>
-    <button id="loginBtn">Login</button>
+<h2 id="authTitle">Login</h2>
+<input id="name" placeholder="Full Name">
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<input id="whatsapp" placeholder="WhatsApp Number (for sellers)">
+<button onclick="registerUser()">Create Account</button>
+<button onclick="loginUser()">Login</button>
 </div>
 
 <!-- SELLER DASHBOARD -->
 <div class="container" id="sellerPanel">
-    <h2>Seller Dashboard</h2>
-    <input id="vegName" placeholder="Vegetable Name">
-    <input id="vegPrice" placeholder="Price (GHC)">
-    <input type="file" id="vegImage" accept="image/*">
-    <button id="addVegBtn">Add Vegetable</button>
-    <h3>My Vegetables</h3>
-    <div id="sellerProducts"></div>
+<h2>Seller Dashboard</h2>
+<input id="vegName" placeholder="Vegetable Name">
+<input id="vegPrice" placeholder="Price (GHC)">
+<input type="file" id="vegImage" accept="image/*">
+<button onclick="addVegetable()">Add Vegetable</button>
+<h3>My Vegetables</h3>
+<div id="sellerProducts"></div>
 </div>
 
 <!-- BUYER DASHBOARD -->
 <div class="container" id="buyerPanel">
-    <h2>Buyer Dashboard</h2>
-    <h3>Available Vegetables</h3>
-    <div id="marketProducts"></div>
+<h2>Buyer Dashboard</h2>
+<h3>Available Vegetables</h3>
+<div id="marketProducts"></div>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function(){
-
 let selectedRole = "";
 let currentUser = "";
-
-const sellerBtn = document.getElementById("sellerBtn");
-const buyerBtn = document.getElementById("buyerBtn");
-
-sellerBtn.addEventListener("click", ()=> chooseRole('seller'));
-buyerBtn.addEventListener("click", ()=> chooseRole('buyer'));
 
 function chooseRole(role){
     selectedRole = role;
     document.getElementById("roleSelect").style.display = "none";
     document.getElementById("authSection").style.display = "block";
-    document.getElementById("authTitle").innerText = role==='seller' ? "Seller Login / Register" : "Buyer Login / Register";
+    document.getElementById("authTitle").innerText = 
+        role==='seller' ? "Seller Login / Register" : "Buyer Login / Register";
 }
 
-document.getElementById("registerBtn").addEventListener("click", registerUser);
-document.getElementById("loginBtn").addEventListener("click", loginUser);
-document.getElementById("addVegBtn").addEventListener("click", addVegetable);
-
 function registerUser(){
-    let user={
-        name: document.getElementById("name").value,
-        email: document.getElementById("email").value,
-        pass: document.getElementById("password").value,
-        role: selectedRole,
-        whatsapp: selectedRole==='seller'? document.getElementById("whatsapp").value : null
-    };
-    if(selectedRole==='seller' && !user.whatsapp){ alert("Please provide WhatsApp!"); return; }
-    localStorage.setItem(user.email, JSON.stringify(user));
+    let name=document.getElementById("name").value;
+    let email=document.getElementById("email").value;
+    let pass=document.getElementById("password").value;
+    let whatsapp = selectedRole==='seller'? document.getElementById("whatsapp").value : null;
+    if(selectedRole==='seller' && !whatsapp){ alert("Please provide WhatsApp!"); return; }
+
+    let user={name,email,pass,role:selectedRole,whatsapp};
+    localStorage.setItem(email,JSON.stringify(user));
     alert("Account created!");
 }
 
 function loginUser(){
     let email=document.getElementById("email").value;
     let pass=document.getElementById("password").value;
-    let user=localStorage.getItem(email);
-    if(!user){ alert("Account not found!"); return; }
-    let data=JSON.parse(user);
+    let userData=localStorage.getItem(email);
+    if(!userData){ alert("Account not found!"); return; }
+    let data=JSON.parse(userData);
     if(data.pass!==pass){ alert("Wrong password!"); return; }
+
     currentUser=email;
     if(data.role==='seller'){ showSellerPanel(); }
     else { showBuyerPanel(); }
@@ -190,16 +179,17 @@ function addVegetable(){
     let price=document.getElementById("vegPrice").value;
     let imgInput=document.getElementById("vegImage");
     if(!name || !price){ alert("Enter name and price!"); return; }
+
     let sellerData=JSON.parse(localStorage.getItem(currentUser));
-    if(!sellerData.whatsapp){ alert("Seller WhatsApp not found!"); return; }
+    if(!sellerData.whatsapp){ alert("Seller WhatsApp missing!"); return; }
 
     if(imgInput.files && imgInput.files[0]){
         let reader=new FileReader();
         reader.onload=function(e){
             let item={
-                seller: currentUser,
-                name:name,
-                price:price,
+                seller:currentUser,
+                name,
+                price,
                 image:e.target.result,
                 whatsapp:sellerData.whatsapp
             };
@@ -207,13 +197,7 @@ function addVegetable(){
         }
         reader.readAsDataURL(imgInput.files[0]);
     }else{
-        let item={
-            seller: currentUser,
-            name:name,
-            price:price,
-            image:null,
-            whatsapp:sellerData.whatsapp
-        };
+        let item={seller:currentUser,name,price,image:null,whatsapp:sellerData.whatsapp};
         saveVegetable(item);
     }
 }
@@ -257,14 +241,12 @@ function loadMarket(){
     });
 }
 
-window.buyWhatsApp=function(number,product,price){
+function buyWhatsApp(number,product,price){
     if(!number){ alert("Seller WhatsApp not provided!"); return; }
     let msg=Hello, I want to buy "${product}" for GHC ${price};
     let url=https://wa.me/${number}?text=${encodeURIComponent(msg)};
     window.open(url,"_blank");
 }
-
-}); // end DOMContentLoaded
 </script>
 
 </body>
