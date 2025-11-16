@@ -68,15 +68,20 @@ button {background:#4CAF50; color:white; cursor:pointer; font-weight:bold; borde
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function(){
-let cart = [];
-let filteredMarket = [];
+window.cart = [];
+window.filteredMarket = [];
 
 // --- Role selection ---
 window.chooseRole = function(role){
-    document.getElementById("roleSelect").style.display="none";
-    if(role==="seller"){ document.getElementById("sellerPanel").style.display="block"; loadSellerProducts();}
-    else{ document.getElementById("buyerPanel").style.display="block"; loadMarket(); loadCart();}
+    document.getElementById("roleSelect").style.display = "none";
+    if(role === "seller") {
+        document.getElementById("sellerPanel").style.display = "block"; 
+        loadSellerProducts();
+    } else {
+        document.getElementById("buyerPanel").style.display = "block"; 
+        loadMarket(); 
+        loadCart();
+    }
 }
 
 // --- Seller functionality ---
@@ -97,7 +102,7 @@ window.addOrUpdateVegetable = async function(){
     loadSellerProducts();
 }
 
-function loadSellerProducts(){
+window.loadSellerProducts = function(){
     let market = JSON.parse(localStorage.getItem("market")||"[]");
     let box = document.getElementById("sellerProducts"); box.innerHTML="";
     market.forEach((v,i)=>{
@@ -123,13 +128,13 @@ window.deleteVegetable = function(i){
 }
 
 // --- Buyer functionality ---
-function loadMarket(){
+window.loadMarket = function(){
     let market = JSON.parse(localStorage.getItem("market")||"[]");
-    filteredMarket = [...market];
-    displayMarket(filteredMarket);
+    window.filteredMarket = [...market];
+    displayMarket(window.filteredMarket);
 }
 
-function displayMarket(market){
+window.displayMarket = function(market){
     let box = document.getElementById("marketProducts"); box.innerHTML="";
     market.forEach((v,i)=>{
         let html=<div class="product"><b>${v.name}</b><br>GHC ${v.price}<div class="gallery">;
@@ -143,37 +148,36 @@ function displayMarket(market){
 window.searchProducts = function(){
     let term = document.getElementById("searchInput").value.toLowerCase();
     let market = JSON.parse(localStorage.getItem("market")||"[]");
-    filteredMarket = market.filter(p=>p.name.toLowerCase().includes(term));
-    displayMarket(filteredMarket);
+    window.filteredMarket = market.filter(p=>p.name.toLowerCase().includes(term));
+    displayMarket(window.filteredMarket);
 }
 
 // --- Cart ---
 window.addToCart = function(i){
-    let product = filteredMarket[i]; // ensure adding correct filtered item
-    cart.push({...product});
+    let product = window.filteredMarket[i]; 
+    window.cart.push({...product});
     loadCart();
 }
-function loadCart(){
+window.loadCart = function(){
     let box = document.getElementById("cartItems"); box.innerHTML="";
     let total = 0;
-    cart.forEach((item,i)=>{
+    window.cart.forEach((item,i)=>{
         total += Number(item.price);
         box.innerHTML += <div class="cart-item">${item.name} - GHC ${item.price}<img src="${item.images[0]||''}"><button type="button" onclick="removeFromCart(${i})">Remove</button></div>;
     });
     document.getElementById("cartTotal").innerText = "Total: GHC " + total;
 }
-window.removeFromCart = function(i){ cart.splice(i,1); loadCart(); }
+window.removeFromCart = function(i){ window.cart.splice(i,1); loadCart(); }
 window.checkoutCart = function(){
-    if(cart.length===0){ alert("Cart is empty!"); return; }
+    if(window.cart.length===0){ alert("Cart is empty!"); return; }
     alert("Order confirmed!");
-    cart = [];
+    window.cart = [];
     loadCart();
 }
 
 // --- Utility ---
 function fileToBase64(file){ return new Promise((res,rej)=>{ let reader = new FileReader(); reader.onload=()=>res(reader.result); reader.onerror=rej; reader.readAsDataURL(file); }); }
 
-});
 </script>
 </body>
 </html>
