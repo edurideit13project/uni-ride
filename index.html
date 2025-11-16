@@ -3,28 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <title>FreshBite Campus Market</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body {font-family: Arial, sans-serif; margin:0; background:#f7f7f7;}
 header {
     background: url('logo.jpg') no-repeat center center;
-    background-size: cover; /* use 'contain' if you want the full logo to fit */
+    background-size: cover;
     color:white;
-    padding:100px 20px; /* increase height so logo shows nicely */
+    padding:100px 20px;
     text-align:center;
 }
 header h1, header p { text-shadow: 2px 2px 4px rgba(0,0,0,0.6); }
 
-.container {width:90%; max-width:500px; margin:25px auto; background:white; padding:25px; border-radius:10px; box-shadow:0 0 10px #ccc;}
-input, select, button {width:100%; padding:12px; margin:8px 0; border:1px solid #ccc; border-radius:5px;}
-button {background:#4CAF50; color:white; cursor:pointer; font-weight:bold;}
+.container {width:90%; max-width:800px; margin:25px auto; background:white; padding:25px; border-radius:10px; box-shadow:0 0 10px #ccc;}
+button, input {width:100%; padding:12px; margin:8px 0; border-radius:5px;}
+button {background:#4CAF50; color:white; cursor:pointer; font-weight:bold; border:none;}
 #sellerPanel, #buyerPanel {display:none;}
-.product {background:#f1f1f1; padding:10px; margin-top:10px; border-radius:5px; border-left:5px solid #4CAF50;}
-.product img {width:100%; max-height:150px; object-fit:cover; margin-top:5px; border-radius:5px;}
-.gallery img {width:48%; margin:1%; float:left;}
-.clearfix::after {content:""; clear:both; display:table;}
-.cart-item {background:#e8f5e9; padding:10px; margin:10px 0; border-radius:5px;}
-.cart-item img {width:50px; height:50px; object-fit:cover; border-radius:5px; vertical-align:middle;}
+.product-grid {display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:15px;}
+.product {background:#f1f1f1; padding:10px; border-radius:5px; text-align:center; overflow:hidden;}
+.product img {width:100%; max-height:150px; object-fit:cover; border-radius:5px;}
+.cart-item {background:#e8f5e9; padding:10px; margin:10px 0; border-radius:5px; display:flex; align-items:center; justify-content:space-between;}
+.cart-item img {width:50px; height:50px; object-fit:cover; border-radius:5px;}
 .cart-total {font-weight:bold; margin-top:10px;}
+.gallery {display:flex; overflow-x:auto; gap:5px;}
+.gallery img {width:100px; height:100px; object-fit:cover; border-radius:5px; flex-shrink:0;}
+#searchInput {margin-bottom:10px; padding:10px; border:1px solid #ccc; border-radius:5px;}
 </style>
 </head>
 <body>
@@ -35,18 +38,9 @@ button {background:#4CAF50; color:white; cursor:pointer; font-weight:bold;}
 </header>
 
 <div class="container" id="roleSelect">
-<h2>Choose Account Type</h2>
-<button onclick="chooseRole('seller')">I am a Seller</button>
-<button onclick="chooseRole('buyer')">I am a Buyer</button>
-</div>
-
-<div class="container" id="authSection" style="display:none;">
-<h2 id="authTitle">Login</h2>
-<input id="name" placeholder="Full Name">
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-<button onclick="registerUser()">Create Account</button>
-<button onclick="loginUser()">Login</button>
+<h2>Choose Your Role</h2>
+<button type="button" onclick="chooseRole('seller')">I am a Seller</button>
+<button type="button" onclick="chooseRole('buyer')">I am a Buyer</button>
 </div>
 
 <!-- SELLER PANEL -->
@@ -56,174 +50,130 @@ button {background:#4CAF50; color:white; cursor:pointer; font-weight:bold;}
 <input id="vegPrice" placeholder="Price (GHC)">
 <input type="file" id="vegImages" multiple accept="image/*">
 <input type="hidden" id="editIndex">
-<button onclick="addOrUpdateVegetable()">Add / Update Vegetable</button>
-<h3>My Vegetables</h3>
-<div id="sellerProducts"></div>
+<button type="button" onclick="addOrUpdateVegetable()">Add / Update Vegetable</button>
+<h3>My Products</h3>
+<div id="sellerProducts" class="product-grid"></div>
 </div>
 
 <!-- BUYER PANEL -->
 <div class="container" id="buyerPanel">
 <h2>Buyer Dashboard</h2>
-<h3>Available Vegetables</h3>
-<div id="marketProducts"></div>
+<input type="text" id="searchInput" placeholder="Search products..." oninput="searchProducts()">
+<h3>Available Products</h3>
+<div id="marketProducts" class="product-grid"></div>
 <h3>Cart</h3>
 <div id="cartItems"></div>
 <div class="cart-total" id="cartTotal"></div>
-<button onclick="checkoutCart()">Checkout</button>
+<button type="button" onclick="checkoutCart()">Checkout</button>
 </div>
 
 <script>
-let selectedRole = "";
-let currentUser = "";
+document.addEventListener("DOMContentLoaded", function(){
 let cart = [];
+let filteredMarket = [];
 
 // --- Role selection ---
-function chooseRole(role){
-    selectedRole = role;
+window.chooseRole = function(role){
     document.getElementById("roleSelect").style.display="none";
-    document.getElementById("authSection").style.display="block";
-    document.getElementById("authTitle").innerText = role==="seller"? "Seller Login / Register":"Buyer Login / Register";
+    if(role==="seller"){ document.getElementById("sellerPanel").style.display="block"; loadSellerProducts();}
+    else{ document.getElementById("buyerPanel").style.display="block"; loadMarket(); loadCart();}
 }
 
-// --- User auth ---
-function registerUser(){
-    let user={name:document.getElementById("name").value,email:document.getElementById("email").value,pass:document.getElementById("password").value,role:selectedRole};
-    localStorage.setItem(user.email,JSON.stringify(user));
-    alert("Account created successfully!");
-}
-function loginUser(){
-    let email=document.getElementById("email").value;
-    let pass=document.getElementById("password").value;
-    let user=localStorage.getItem(email);
-    if(!user)return alert("Account not found!");
-    let data=JSON.parse(user);
-    if(data.pass!==pass)return alert("Wrong password!");
-    currentUser=email;
-    if(data.role==="seller"){showSellerPanel();}
-    else{showBuyerPanel();}
-}
-
-// --- Seller panel ---
-function showSellerPanel(){
-    document.getElementById("authSection").style.display="none";
-    document.getElementById("sellerPanel").style.display="block";
-    loadSellerProducts();
-}
-async function addOrUpdateVegetable(){
-    let name=document.getElementById("vegName").value;
-    let price=document.getElementById("vegPrice").value;
-    let files=document.getElementById("vegImages").files;
+// --- Seller functionality ---
+window.addOrUpdateVegetable = async function(){
+    let name = document.getElementById("vegName").value;
+    let price = document.getElementById("vegPrice").value;
+    let files = document.getElementById("vegImages").files;
+    if(!name || !price){ alert("Enter name and price!"); return; }
     let images=[];
     for(let f of files){ images.push(await fileToBase64(f)); }
 
-    let market=JSON.parse(localStorage.getItem("market")||"[]");
-    let editIndex=document.getElementById("editIndex").value;
-    if(editIndex!==""){
-        market[editIndex]={seller:currentUser,name,price,images:images.length?images:market[editIndex].images};
-        document.getElementById("editIndex").value="";
-    } else {
-        market.push({seller:currentUser,name,price,images});
-    }
-    localStorage.setItem("market",JSON.stringify(market));
-    document.getElementById("vegName").value="";
-    document.getElementById("vegPrice").value="";
-    document.getElementById("vegImages").value="";
+    let market = JSON.parse(localStorage.getItem("market")||"[]");
+    let editIndex = document.getElementById("editIndex").value;
+    if(editIndex!==""){ market[editIndex] = {name, price, images: images.length?images:market[editIndex].images}; document.getElementById("editIndex").value=""; }
+    else{ market.push({name, price, images}); }
+    localStorage.setItem("market", JSON.stringify(market));
+    document.getElementById("vegName").value=""; document.getElementById("vegPrice").value=""; document.getElementById("vegImages").value="";
     loadSellerProducts();
 }
 
 function loadSellerProducts(){
-    let market=JSON.parse(localStorage.getItem("market")||"[]");
-    let myList=market.map((v,i)=>({...v,index:i})).filter(v=>v.seller===currentUser);
-    let box=document.getElementById("sellerProducts"); box.innerHTML="";
-    myList.forEach(v=>{
-        let html=`<div class='product'>
-            <b>${v.name}</b> - GHC ${v.price}
-            <div class='gallery clearfix'>`;
-        v.images.forEach(img=>{html+=<img src='${img}'>});
-        html+="</div>";
-        html+=<button onclick='editVegetable(${v.index})'>Edit</button> <button onclick='deleteVegetable(${v.index})'>Delete</button>;
-        html+="</div>";
+    let market = JSON.parse(localStorage.getItem("market")||"[]");
+    let box = document.getElementById("sellerProducts"); box.innerHTML="";
+    market.forEach((v,i)=>{
+        let html=<div class="product"><b>${v.name}</b><br>GHC ${v.price}<div class="gallery">;
+        v.images.forEach(img=>{ html+=<img src='${img}'>; });
+        html+=</div><button type="button" onclick='editVegetable(${i})'>Edit</button> <button type="button" onclick='deleteVegetable(${i})'>Delete</button></div>;
         box.innerHTML+=html;
     });
 }
 
-function editVegetable(index){
-    let market=JSON.parse(localStorage.getItem("market")||"[]");
-    document.getElementById("vegName").value=market[index].name;
-    document.getElementById("vegPrice").value=market[index].price;
-    document.getElementById("editIndex").value=index;
+window.editVegetable = function(i){
+    let market = JSON.parse(localStorage.getItem("market")||"[]");
+    document.getElementById("vegName").value = market[i].name;
+    document.getElementById("vegPrice").value = market[i].price;
+    document.getElementById("editIndex").value = i;
 }
 
-function deleteVegetable(index){
-    if(!confirm("Delete this vegetable?")) return;
-    let market=JSON.parse(localStorage.getItem("market")||"[]");
-    market.splice(index,1);
-    localStorage.setItem("market",JSON.stringify(market));
+window.deleteVegetable = function(i){
+    if(!confirm("Delete this product?")) return;
+    let market = JSON.parse(localStorage.getItem("market")||"[]");
+    market.splice(i,1); localStorage.setItem("market", JSON.stringify(market));
     loadSellerProducts();
 }
 
-// --- Buyer panel ---
-function showBuyerPanel(){
-    document.getElementById("authSection").style.display="none";
-    document.getElementById("buyerPanel").style.display="block";
-    loadMarket();
-    loadCart();
-}
+// --- Buyer functionality ---
 function loadMarket(){
-    let market=JSON.parse(localStorage.getItem("market")||"[]");
-    let box=document.getElementById("marketProducts"); box.innerHTML="";
+    let market = JSON.parse(localStorage.getItem("market")||"[]");
+    filteredMarket = [...market];
+    displayMarket(filteredMarket);
+}
+
+function displayMarket(market){
+    let box = document.getElementById("marketProducts"); box.innerHTML="";
     market.forEach((v,i)=>{
-        let html=`<div class='product'>
-            <b>${v.name}</b> - GHC ${v.price}<br>Seller: ${v.seller}
-            <div class='gallery clearfix'>`;
-        v.images.forEach(img=>{html+=<img src='${img}'>});
-        html+="</div>";
-        html+=<button onclick='addToCart(${i})'>Add to Cart</button>;
-        html+="</div>";
+        let html=<div class="product"><b>${v.name}</b><br>GHC ${v.price}<div class="gallery">;
+        v.images.forEach(img=>{ html+=<img src='${img}'>; });
+        html+=</div><button type="button" onclick='addToCart(${i})'>Add to Cart</button></div>;
         box.innerHTML+=html;
     });
 }
 
+// --- Search products ---
+window.searchProducts = function(){
+    let term = document.getElementById("searchInput").value.toLowerCase();
+    let market = JSON.parse(localStorage.getItem("market")||"[]");
+    filteredMarket = market.filter(p=>p.name.toLowerCase().includes(term));
+    displayMarket(filteredMarket);
+}
+
 // --- Cart ---
-function addToCart(index){
-    let market=JSON.parse(localStorage.getItem("market")||"[]");
-    cart.push({...market[index]});
+window.addToCart = function(i){
+    let product = filteredMarket[i]; // ensure adding correct filtered item
+    cart.push({...product});
     loadCart();
 }
 function loadCart(){
-    let box=document.getElementById("cartItems");
-    box.innerHTML="";
-    let total=0;
+    let box = document.getElementById("cartItems"); box.innerHTML="";
+    let total = 0;
     cart.forEach((item,i)=>{
-        total+=Number(item.price);
-        let html=`<div class='cart-item'>
-            ${item.name} - GHC ${item.price}
-            <div class='gallery clearfix'>`;
-        item.images.forEach(img=>{html+=<img src='${img}'>});
-        html+="</div>";
-        html+=<button onclick='removeFromCart(${i})'>Remove</button>;
-        html+="</div>";
-        box.innerHTML+=html;
+        total += Number(item.price);
+        box.innerHTML += <div class="cart-item">${item.name} - GHC ${item.price}<img src="${item.images[0]||''}"><button type="button" onclick="removeFromCart(${i})">Remove</button></div>;
     });
-    document.getElementById("cartTotal").innerText="Total: GHC "+total;
+    document.getElementById("cartTotal").innerText = "Total: GHC " + total;
 }
-function removeFromCart(i){ cart.splice(i,1); loadCart(); }
-function checkoutCart(){
-    if(cart.length===0) return alert("Cart is empty!");
-    alert("Order confirmed! Your seller(s) will contact you.");
-    cart=[];
+window.removeFromCart = function(i){ cart.splice(i,1); loadCart(); }
+window.checkoutCart = function(){
+    if(cart.length===0){ alert("Cart is empty!"); return; }
+    alert("Order confirmed!");
+    cart = [];
     loadCart();
 }
 
 // --- Utility ---
-function fileToBase64(file){
-    return new Promise((res,rej)=>{
-        let reader=new FileReader();
-        reader.onload=()=>res(reader.result);
-        reader.onerror=rej;
-        reader.readAsDataURL(file);
-    });
-}
+function fileToBase64(file){ return new Promise((res,rej)=>{ let reader = new FileReader(); reader.onload=()=>res(reader.result); reader.onerror=rej; reader.readAsDataURL(file); }); }
+
+});
 </script>
 </body>
 </html>
