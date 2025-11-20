@@ -1,290 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FreshBite Campus Market</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #fefefe;
-            color: #333;
-        }
+<meta charset="UTF-8">
+<title>UniRide - Premium Ride App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    /* Body */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #ffffff;
+    }
 
-        header {
-            text-align: center;
-            /* Use your flyer as the background */
-            background: url('Logo.jpg') no-repeat center center;
-            background-size: cover;
-            color: white;
-            padding: 60px 20px; /* Increased padding for better visibility */
-            position: relative;
-        }
+    /* Header */
+    header {
+        background: #001F3F; /* Deep Blue */
+        color: #E5B80B; /* Rich Gold */
+        padding: 18px;
+        text-align: center;
+        font-size: 26px;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
 
-        /* Optional: add a semi-transparent overlay to make text readable */
-        header::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.4); /* Adjust opacity if needed */
-            z-index: 0;
-        }
+    /* Containers */
+    .container {
+        width: 90%;
+        max-width: 520px;
+        margin: 30px auto;
+        background: #ffffff;
+        padding: 22px;
+        border-radius: 14px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.15);
+        border-left: 5px solid #001F3F;
+    }
 
-        header img.logo {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 50%;
-            position: relative;
-            z-index: 1;
-        }
+    /* Headings */
+    h2, h3 {
+        color: #001F3F;
+    }
 
-        header h1, header p {
-            position: relative;
-            z-index: 1;
-            margin: 10px 0 0 0;
-        }
+    /* Inputs */
+    input, select {
+        width: 100%;
+        padding: 14px;
+        margin-top: 12px;
+        border-radius: 10px;
+        border: 2px solid #001F3F;
+        font-weight: bold;
+        color: #001F3F;
+        font-size: 15px;
+    }
 
-        .role-selection {
-            text-align: center;
-            margin: 30px 0;
-        }
+    /* Buttons */
+    button {
+        width: 100%;
+        padding: 16px;
+        margin-top: 12px;
+        border-radius: 10px;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        background: linear-gradient(90deg, #E5B80B, #FFD700);
+        color: #001F3F;
+        transition: 0.3s;
+    }
 
-        button {
-            padding: 12px 25px;
-            margin: 10px;
-            border: none;
-            background: #28a745;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background 0.3s;
-        }
+    button:hover {
+        opacity: 0.85;
+    }
 
-        button:hover {
-            background: #218838;
-        }
+    /* Ride Boxes */
+    .ride-box {
+        background: #f0f8ff; /* Light blue */
+        padding: 16px;
+        border-radius: 10px;
+        margin-top: 12px;
+        border-left: 6px solid #E5B80B;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
 
-        .hidden {
-            display: none;
-        }
+    /* Hide Sections */
+    #dashboard, #driverDashboard, #signupPage, #loginPage {
+        display: none;
+    }
 
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-width: 400px;
-            margin: 20px auto;
-        }
-
-        input, select {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            padding: 15px;
-            text-align: center;
-        }
-
-        .product-card img {
-            max-width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        .product-card h3 {
-            margin: 5px 0;
-        }
-
-        .product-card p {
-            margin: 5px 0;
-            font-weight: bold;
-        }
-
-        .product-card a button {
-            width: 100%;
-            background: #25D366;
-            border-radius: 5px;
-        }
-
-        .product-card a button:hover {
-            background: #128C7E;
-        }
-
-        #searchInput, #categoryFilter {
-            padding: 10px;
-            margin: 10px 20px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            font-size: 14px;
-            max-width: 300px;
-        }
-    </style>
+    /* Responsive */
+    @media (max-width: 600px) {
+        header { font-size: 22px; padding: 15px; }
+        .container { padding: 18px; margin-top: 20px; }
+        input, select { padding: 12px; font-size: 14px; }
+        button { padding: 14px; font-size: 15px; }
+        .ride-box { padding: 14px; }
+    }
+</style>
 </head>
 <body>
-    <header>
-        <img src="Logo.jpg" alt="FreshBite Logo" class="logo">
-        <h1>FreshBite Campus Market</h1>
-        <p>Your campus hub for fresh food and essentials!</p>
-    </header>
 
-    <main>
-        <div class="role-selection">
-            <button id="buyerBtn">I am a Buyer</button>
-            <button id="sellerBtn">I am a Seller</button>
-        </div>
+<header>UniRide - Premium Rides</header>
 
-        <!-- Seller Section -->
-        <section id="sellerSection" class="hidden">
-            <h2>Seller Dashboard</h2>
-            <form id="sellerForm">
-                <input type="text" id="sellerName" placeholder="Your Name" required>
-                <input type="text" id="productName" placeholder="Product Name" required>
-                <input type="number" id="productPrice" placeholder="Price (GHS)" required>
-                <select id="productCategory" required>
-                    <option value="">Select Category</option>
-                    <option value="Vegetables">Vegetables</option>
-                    <option value="Snacks">Snacks</option>
-                    <option value="Drinks">Drinks</option>
-                    <option value="Others">Others</option>
-                </select>
-                <input type="file" id="productImage" accept="image/*" required>
-                <input type="text" id="whatsappNumber" placeholder="Your WhatsApp number" required>
-                <button type="submit">Add Product</button>
-            </form>
-            <div id="productList" class="product-grid"></div>
-        </section>
+<div class="container" id="home">
+    <h2>Welcome to UniRide</h2>
+    <button onclick="showSignup()">Create Account</button>
+    <button onclick="showLogin()">Login</button>
+</div>
 
-        <!-- Buyer Section -->
-        <section id="buyerSection" class="hidden">
-            <h2>Available Products</h2>
-            <input type="text" id="searchInput" placeholder="Search products..." />
-            <select id="categoryFilter">
-                <option value="All">All Categories</option>
-                <option value="Vegetables">Vegetables</option>
-                <option value="Snacks">Snacks</option>
-                <option value="Drinks">Drinks</option>
-                <option value="Others">Others</option>
-            </select>
-            <div id="buyerProducts" class="product-grid"></div>
-        </section>
-    </main>
+<!-- SIGNUP -->
+<div class="container" id="signupPage">
+    <h2>Create Account</h2>
+    <select id="role">
+        <option value="">Select Role</option>
+        <option value="passenger">Passenger</option>
+        <option value="driver">Driver</option>
+    </select>
+    <input type="text" id="signupName" placeholder="Full Name">
+    <input type="text" id="signupEmail" placeholder="Email">
+    <input type="password" id="signupPassword" placeholder="Password">
+    <button onclick="signup()">Sign Up</button>
+    <button onclick="goHome()">Back</button>
+</div>
 
-    <script>
-        const buyerBtn = document.getElementById('buyerBtn');
-        const sellerBtn = document.getElementById('sellerBtn');
-        const sellerSection = document.getElementById('sellerSection');
-        const buyerSection = document.getElementById('buyerSection');
-        const sellerForm = document.getElementById('sellerForm');
-        const productList = document.getElementById('productList');
-        const buyerProducts = document.getElementById('buyerProducts');
-        const searchInput = document.getElementById('searchInput');
-        const categoryFilter = document.getElementById('categoryFilter');
+<!-- LOGIN -->
+<div class="container" id="loginPage">
+    <h2>Login</h2>
+    <input type="text" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <button onclick="goHome()">Back</button>
+</div>
 
-        let products = JSON.parse(localStorage.getItem('products')) || [];
+<!-- PASSENGER DASHBOARD -->
+<div class="container" id="dashboard">
+    <h2>Passenger Dashboard</h2>
+    <h3>Request a Ride</h3>
+    <input type="text" id="pickup" placeholder="Pickup Location">
+    <input type="text" id="destination" placeholder="Destination">
+    <button onclick="requestRide()">Request Ride</button>
 
-        buyerBtn.addEventListener('click', () => {
-            sellerSection.classList.add('hidden');
-            buyerSection.classList.remove('hidden');
-            displayBuyerProducts();
-        });
+    <h3>Your Ride Status</h3>
+    <p id="rideStatus">No active ride</p>
 
-        sellerBtn.addEventListener('click', () => {
-            buyerSection.classList.add('hidden');
-            sellerSection.classList.remove('hidden');
-        });
+    <button onclick="logout()">Logout</button>
+</div>
 
-        sellerForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const sellerName = document.getElementById('sellerName').value;
-            const name = document.getElementById('productName').value;
-            const price = document.getElementById('productPrice').value;
-            const category = document.getElementById('productCategory').value;
-            const whatsapp = document.getElementById('whatsappNumber').value;
-            const imageFile = document.getElementById('productImage').files[0];
+<!-- DRIVER DASHBOARD -->
+<div class="container" id="driverDashboard">
+    <h2>Driver Dashboard</h2>
+    <h3>Incoming Ride Requests</h3>
+    <div id="rideRequests"></div>
+    <button onclick="logout()">Logout</button>
+</div>
 
-            if(imageFile){
-                const reader = new FileReader();
-                reader.onload = function() {
-                    const product = { sellerName, name, price, category, image: reader.result, whatsapp };
-                    products.push(product);
-                    localStorage.setItem('products', JSON.stringify(products));
-                    displaySellerProducts();
-                    sellerForm.reset();
-                }
-                reader.readAsDataURL(imageFile);
+<script>
+    function showSignup(){ hideAll(); document.getElementById("signupPage").style.display="block"; }
+    function showLogin(){ hideAll(); document.getElementById("loginPage").style.display="block"; }
+    function goHome(){ hideAll(); document.getElementById("home").style.display="block"; }
+    function hideAll(){ document.getElementById("home").style.display="none"; document.getElementById("signupPage").style.display="none"; document.getElementById("loginPage").style.display="none"; document.getElementById("dashboard").style.display="none"; document.getElementById("driverDashboard").style.display="none"; }
+
+    function signup(){
+        let users = JSON.parse(localStorage.getItem("users") || "[]");
+        let role = document.getElementById("role").value;
+        let name = document.getElementById("signupName").value;
+        let email = document.getElementById("signupEmail").value;
+        let password = document.getElementById("signupPassword").value;
+        if(!role||!name||!email||!password){ alert("Fill all fields!"); return; }
+        users.push({role,name,email,password});
+        localStorage.setItem("users", JSON.stringify(users));
+        alert("Account created!");
+        showLogin();
+    }
+
+    function login(){
+        let users = JSON.parse(localStorage.getItem("users") || "[]");
+        let email = document.getElementById("loginEmail").value;
+        let password = document.getElementById("loginPassword").value;
+        let user = users.find(u=>u.email===email && u.password===password);
+        if(!user){ alert("Invalid login"); return; }
+        localStorage.setItem("loggedIn", JSON.stringify(user));
+        if(user.role==="passenger") showPassengerDashboard();
+        else showDriverDashboard();
+    }
+
+    function showPassengerDashboard(){ hideAll(); document.getElementById("dashboard").style.display="block"; }
+    function showDriverDashboard(){ hideAll(); document.getElementById("driverDashboard").style.display="block"; loadRequests(); }
+    function logout(){ localStorage.removeItem("loggedIn"); goHome(); }
+
+    function requestRide(){
+        let pickup=document.getElementById("pickup").value;
+        let destination=document.getElementById("destination").value;
+        if(!pickup||!destination){ alert("Fill pickup and destination"); return; }
+        let passenger=JSON.parse(localStorage.getItem("loggedIn"));
+        let requests=JSON.parse(localStorage.getItem("rideRequests")||"[]");
+        let newRide={id:Date.now(),passenger:passenger.name,pickup,destination,status:"pending"};
+        requests.push(newRide);
+        localStorage.setItem("rideRequests",JSON.stringify(requests));
+        document.getElementById("rideStatus").innerText="Waiting for a driver...";
+        alert("Ride requested!");
+    }
+
+    function loadRequests(){
+        let requests=JSON.parse(localStorage.getItem("rideRequests")||"[]");
+        let container=document.getElementById("rideRequests");
+        container.innerHTML="";
+        if(requests.length===0){ container.innerHTML="<p>No ride requests</p>"; return; }
+        requests.forEach(r=>{
+            if(r.status==="pending"){
+                container.innerHTML+=`<div class="ride-box">
+                    <p><b>Passenger:</b> ${r.passenger}</p>
+                    <p><b>Pickup:</b> ${r.pickup}</p>
+                    <p><b>Destination:</b> ${r.destination}</p>
+                    <button onclick="acceptRide(${r.id})">Accept Ride</button>
+                </div>`;
             }
         });
+    }
 
-        function displaySellerProducts() {
-            productList.innerHTML = '';
-            products.forEach(product => {
-                productList.innerHTML += `
-                    <div class="product-card">
-                        <img src="${product.image}" alt="${product.name}">
-                        <h3>${product.name}</h3>
-                        <p>Price: GHS ${product.price}</p>
-                        <p>Category: ${product.category}</p>
-                        <p>Seller: ${product.sellerName}</p>
-                        <p>WhatsApp: ${product.whatsapp}</p>
-                    </div>
-                `;
-            });
-        }
-
-        function displayBuyerProducts() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const selectedCategory = categoryFilter.value;
-            buyerProducts.innerHTML = '';
-
-            const filteredProducts = products.filter(product => {
-                const matchesName = product.name.toLowerCase().includes(searchTerm);
-                const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
-                return matchesName && matchesCategory;
-            });
-
-            filteredProducts.forEach(product => {
-                buyerProducts.innerHTML += `
-                    <div class="product-card">
-                        <img src="${product.image}" alt="${product.name}">
-                        <h3>${product.name}</h3>
-                        <p>Price: GHS ${product.price}</p>
-                        <p>Category: ${product.category}</p>
-                        <p>Seller: ${product.sellerName}</p>
-                        <a href="https://wa.me/${product.whatsapp}" target="_blank">
-                            <button>Buy on WhatsApp</button>
-                        </a>
-                    </div>
-                `;
-            });
-        }
-
-        searchInput.addEventListener('input', displayBuyerProducts);
-        categoryFilter.addEventListener('change', displayBuyerProducts);
-
-        displaySellerProducts();
-        displayBuyerProducts();
-    </script>
+    function acceptRide(id){
+        let requests=JSON.parse(localStorage.getItem("rideRequests")||"[]");
+        let ride=requests.find(r=>r.id===id);
+        ride.status="accepted";
+        localStorage.setItem("rideRequests",JSON.stringify(requests));
+        alert("Ride accepted!");
+        loadRequests();
+    }
+</script>
 </body>
 </html>
